@@ -18,43 +18,51 @@ import jakarta.servlet.http.HttpServletResponse;
 public class FilterTaskAuth extends OncePerRequestFilter {
 
     @Autowired
-                private IUserRepository userRepository;
+    private IUserRepository userRepository;
 
     @Override
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain)
             throws ServletException, IOException {
 
-                //Peegar a autenticação (usuario e senha)
-                var authorization = request.getHeader("Authorization");
+        var servletPath = request.getServletPath();
 
-                //Removendo a palavra basic do inicio da requisição Base64
-                var authEncoded = authorization.substring("Basic".length()).trim();
+        if (servletPath.startsWith("/tasks/")) {
+            // Peegar a autenticação (usuario e senha)
+            var authorization = request.getHeader("Authorization");
 
-                //Decodando a requisição
-                byte[] authDecode = Base64.getDecoder().decode(authEncoded);
+            // Removendo a palavra basic do inicio da requisição Base64
+            var authEncoded = authorization.substring("Basic".length()).trim();
 
-                //Convertendo em String
-                var authString = new String(authDecode);
+            // Decodando a requisição
+            byte[] authDecode = Base64.getDecoder().decode(authEncoded);
 
-                //Transformando em um Array de String e separando em variaveis diferentes
-                String[] credentials = authString.split(":");
-                String username = credentials[0];
-                String password = credentials[1];
+            // Convertendo em String
+            var authString = new String(authDecode);
 
-                //validar usuario
-                    var user = this.userRepository.findByUsername(username);
-                    if(user == null) {
-                        response.sendError(401);
+            // Transformando em um Array de String e separando em variaveis diferentes
+            String[] credentials = authString.split(":");
+            String username = credentials[0];
+            String password = credentials[1];
 
-                        //validar senha
-                        var passwordVerify = BCrypt.verifyer().verify(password.toCharArray(), user.getPassword());
-                        if(passwordVerify.verified) {
-                            //Segue viagem
-                            filterChain.doFilter(request, response);
-                        } else {
-                            response.sendError(401);
-                        }               
-                    }
+            // validar usuario
+            var user = this.userRepository.findByUsername(username);
+            if (user == null) {
+                response.sendError(401);
+            } else {
+                // validar senha
+                var passwordVerify = BCrypt.verifyer().verify(password.toCharArray(), user.getPassword());
+                if (passwordVerify.verified) {
+                    // Segue viagem
+                    request.setAttribute("idUser", user.getId()); //Adicionando o idUser na request e passando para a controler
+                    filterChain.doFilter(request, response);
+                } else {
+                    response.sendError(401);
+                }
+            }
+        } else {
+            filterChain.doFilter(request, response);
+        }
+
     }
 
 }
