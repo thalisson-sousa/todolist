@@ -21,7 +21,10 @@
 https://todolist-java-lx66.onrender.com/users/
 
 - Cadastrar nova Tarefa:
-- https://todolist-java-lx66.onrender.com/users/
+https://todolist-java-lx66.onrender.com/tasks/
+
+- Recuperar ou Atualizar Tarefa, (GET or PUT for):
+https://todolist-java-lx66.onrender.com/tasks/{idTask}
 
 #Como usar:
 - Primeiro cadastre um novo Usuario passando um Json com (name, username, password)
