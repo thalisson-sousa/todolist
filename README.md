@@ -31,7 +31,7 @@ https://todolist-java-lx66.onrender.com/tasks/{idTask}
 example:
 ![image](https://github.com/thalisson-sousa/todolist/assets/27894150/3e75b7dc-008f-4068-8aeb-b7ba2f6deb69)
 
-- Para criar uma tarefa voce deve fazer uma autenticação do tipo Basic Auth, Logo com o usuario criado anteriormente:
+- Para criar uma tarefa voce deve fazer uma autenticação do tipo Basic Auth, Login com o usuario criado anteriormente:
  ![image](https://github.com/thalisson-sousa/todolist/assets/27894150/fb0fe9c9-7f3c-4d69-9b28-3710feafa957)
 
 - Deve passar um body com as demais informações:
